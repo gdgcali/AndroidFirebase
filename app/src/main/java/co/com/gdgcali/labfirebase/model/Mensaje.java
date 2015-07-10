@@ -9,6 +9,13 @@ public class Mensaje {
     private String mensaje;
     private String fecha;
 
+    public Mensaje(String autor, String mensaje, String fecha) {
+        this.autor = autor;
+        this.mensaje = mensaje;
+        this.fecha = fecha;
+    }
+
+
     public String getAutor() {
         return autor;
     }

@@ -1,9 +1,8 @@
-package co.com.gdgcali.labfirebase;
+package co.com.gdgcali.labfirebase.view;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.text.AndroidCharacter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -13,30 +12,65 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
-import java.io.Console;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import co.com.gdgcali.labfirebase.R;
+import co.com.gdgcali.labfirebase.model.Mensaje;
+import co.com.gdgcali.labfirebase.view.adapter.RecentMenssageAdapter;
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends Activity {
 
 
     public static Firebase objFirebase = new Firebase("https://radiant-heat-5907.firebaseio.com/");
     public ListView listvw;
+    private List<Mensaje> listaMensajes = new ArrayList<Mensaje>();
+    RecentMenssageAdapter adapter;
+    Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context = this;
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        listvw = (ListView) findViewById(R.id.lstMensajes);
         objFirebase.addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 System.out.println(dataSnapshot.getValue());
-                Map<String, Object> mensaje = (Map<String, Object>)dataSnapshot.getValue();
+                Map<String, String> mapMensaje = (Map<String, String>) dataSnapshot.getValue();
+                String autor = "", fecha = "", mensaje = "";
+                if (mapMensaje.size() > 0) {
+                    if (!mapMensaje.isEmpty()) {
+
+                        for (Map.Entry<String, String> entry : mapMensaje.entrySet()) {
+
+                            if (entry.getKey().equals("autor")) {
+                                autor = entry.getValue();
+                            }
+                            if (entry.getKey().equals("mensaje")) {
+                                mensaje = entry.getValue();
+                            }
+                            if (entry.getKey().equals("fecha")) {
+                                fecha = entry.getValue();
+                            }
+
+                        }
+                        listaMensajes.add(new Mensaje(autor, mensaje, fecha));
+
+                    }
+
+                }
+                adapter = new RecentMenssageAdapter(listaMensajes, R.layout.item_recent_message, context);
+                listvw.setAdapter(adapter);
+                listvw.refreshDrawableState();
             }
 
             @Override
@@ -62,7 +96,7 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
-    private void llenarLista(String[] mensajes){
+    private void llenarLista(String[] mensajes) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, mensajes);
         listvw.setAdapter(adapter);
     }

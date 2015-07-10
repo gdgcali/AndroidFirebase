@@ -1,4 +1,4 @@
-package co.com.gdgcali.labfirebase;
+package co.com.gdgcali.labfirebase.util;
 
 import android.app.Application;
 
