@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import co.com.gdgcali.labfirebase.view.layout.CircleImageView;
  * Created by user on 09/07/2015.
  */
 public class RecentMenssageAdapter extends BaseAdapter {
+
     private List<Mensaje> listData = new ArrayList<Mensaje>();
     Typeface typeFace;
     private SimpleDateFormat customDateFormat = null;
@@ -29,8 +31,8 @@ public class RecentMenssageAdapter extends BaseAdapter {
     private Context context;
 
     public RecentMenssageAdapter(List<Mensaje> listData, int layoutResourceId, Context context) {
+        super();
         this.listData = listData;
-
         this.layoutResourceId = layoutResourceId;
         this.context = context;
     }
@@ -41,13 +43,13 @@ public class RecentMenssageAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        return listData.get(position);
+    public long getItemId(int position) {
+        return 0;
     }
 
     @Override
-    public long getItemId(int position) {
-        return 0;
+    public Object getItem(int position) {
+        return position;
     }
 
     @Override
@@ -74,7 +76,6 @@ public class RecentMenssageAdapter extends BaseAdapter {
 
         return row;
     }
-
 
     /**
      * Class to hold the row child views so we wont have to inflate more them once per row view.
